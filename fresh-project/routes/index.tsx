@@ -1,25 +1,39 @@
-import { useSignal } from "@preact/signals";
-import Counter from "../islands/Counter.tsx";
+import { FreshContext, Handlers, PageProps } from "$fresh/server.ts";
+import axios from "npm:axios"
+type Country = {
+  country: string,
 
-export default function Home() {
-  const count = useSignal(3);
-  return (
-    <div class="px-4 py-8 mx-auto bg-[#86efac]">
-      <div class="max-w-screen-md mx-auto flex flex-col items-center justify-center">
-        <img
-          class="my-6"
-          src="/logo.svg"
-          width="128"
-          height="128"
-          alt="the Fresh logo: a sliced lemon dripping with juice"
-        />
-        <h1 class="text-4xl font-bold">Welcome to Fresh</h1>
-        <p class="my-4">
-          Try updating this message in the
-          <code class="mx-2">./routes/index.tsx</code> file, and refresh.
-        </p>
-        <Counter count={count} />
-      </div>
+}
+
+export const handler:Handlers = {
+  async GET (req: Request,ctx: FreshContext){
+    try{
+    const url = new URL(req.url)
+    const param = url.searchParams.get("number") || "+34 670432798"
+
+    const datos = await axios.get<Country>(`https://api.api-ninjas.com/v1/validatephone?number=${param}`, {
+      headers: {
+        "X-Api-Key": "o41UmkM39ZTvU9n00j/IIg==H9RI53qcyieVU6GE",
+      },
+    });
+    return ctx.render(datos.data)
+    }catch(e){
+      <div>ERROR</div>
+    }
+  }
+}
+
+const Page = (props: PageProps) => {
+  const {country} = props.data
+  return(
+    <div>
+      <form action="" method="Get">
+        <input type="text" ></input>
+        <button type="submit">Send</button>
+      </form>
+      <a> {country} </a>
     </div>
   );
 }
+
+export default Page;
