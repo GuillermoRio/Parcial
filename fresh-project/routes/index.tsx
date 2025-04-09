@@ -31,7 +31,6 @@ export const handler:Handlers = {
 
 const Page = (props: PageProps) => {
   const {country, phone} = props.data
-  console.log(phone)
   return(
     <div>
       <form action="" method="Get">
